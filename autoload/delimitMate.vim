@@ -425,22 +425,24 @@ function! delimitMate#JumpOut(char) "{{{
 endfunction " }}}
 
 function! delimitMate#JumpAny(...) " {{{
-  if s:is_forbidden('')
-    return ''
-  endif
-  if !s:is_jump()
-    return ''
-  endif
-  " Let's get the character on the right.
-  let char = s:get_char(0)
-  if char == " "
-    " Space expansion.
-    return s:joinUndo() . "\<Right>" . s:joinUndo() . "\<Right>"
-  elseif char == ""
-    " CR expansion.
-    return "\<CR>" . getline(line('.') + 1)[0] . "\<Del>\<Del>"
+  let line = split(getline('.')[col('.') - 1 : ], '\zs')
+  let rights = ""
+  let found = 0
+  for char in line
+    if index(s:get('quotes_list'), char) >= 0 || index(s:get('right_delims'), char) >= 0
+      let rights .= s:joinUndo() . "\<Right>"
+      let found = 1
+      break
+    elseif found == 0
+      let rights .= s:joinUndo() . "\<Right>"
+    else
+      break
+    endif
+  endfor
+  if found == 1
+    return rights
   else
-    return s:joinUndo() . "\<Right>"
+    return ''
   endif
 endfunction " delimitMate#JumpAny() }}}
 

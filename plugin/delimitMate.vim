@@ -349,15 +349,12 @@ function! s:ExtraMappings() "{{{
     silent! imap <unique> <buffer> <Space> <Plug>delimitMateSpace
   endif
   " Jump over any delimiter:
-  inoremap <expr><silent> <Plug>delimitMateS-Tab <SID>TriggerAbb()."\<C-R>=delimitMate#JumpAny()\<CR>"
-  if s:get('tab2exit') && !hasmapto('<Plug>delimitMateS-Tab', 'i') && maparg('<S-Tab>', 'i') == ''
-    silent! imap <unique> <buffer> <S-Tab> <Plug>delimitMateS-Tab
+  inoremap <expr><silent> <Plug>delimitMateJumpAny <SID>TriggerAbb()."\<C-R>=delimitMate#JumpAny()\<CR>"
+  if !hasmapto('<Plug>delimitMateJumpAny', 'i') && maparg('<c-g>', 'i') == ''
+    silent! imap <unique> <buffer> <c-g> <Plug>delimitMateJumpAny
   endif
   " Jump over next delimiters
   inoremap <expr><buffer> <Plug>delimitMateJumpMany <SID>TriggerAbb()."\<C-R>=delimitMate#JumpMany()\<CR>"
-  if !hasmapto('<Plug>delimitMateJumpMany', 'i') && maparg("<C-G>g", 'i') == ''
-    imap <silent> <buffer> <C-G>g <Plug>delimitMateJumpMany
-  endif
 endfunction "}}}
 
 "}}}
